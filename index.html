@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Shoulder Score App</title>
+  <style>
+    body {font-family: sans-serif; background: #f8f8f8; margin: 0; padding: 0; text-align:center;}
+    h1 {margin: 1.2em 0;}
+    .btn {display:block; margin:12px auto; padding:15px; width:85%; max-width:320px; font-size:1.1em; border:none; border-radius:8px; background:#007aff; color:white; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+    .btn-secondary {background:#555;}
+    .page {display:none; padding:1em;}
+    .active {display:block;}
+  </style>
+</head>
+<body>
+
+  <!-- スタートページ -->
+  <div id="page-start" class="page active">
+    <h1>Shoulder Score</h1>
+    <button class="btn" data-page="pain">Pain</button>
+    <button class="btn" data-page="adl">ADL</button>
+    <button class="btn" data-page="function">Function</button>
+    <button class="btn" data-page="strength">Strength</button>
+    <button class="btn" data-page="rom">ROM</button>
+    <button class="btn" data-page="xp">Xp所見</button>
+    <button class="btn btn-secondary" data-page="summary">集計</button>
+  </div>
+
+  <!-- Painページ -->
+  <div id="page-pain" class="page">
+    <h1>Pain</h1>
+    <p>痛みの状態を選択してください：</p>
+    <div style="display:inline-block; text-align:left;">
+      <label><input type="radio" name="pain" value="30,10,15"> 疼痛なし</label><br>
+      <label><input type="radio" name="pain" value="25,8,10"> スポーツ、重労働で軽い痛み</label><br>
+      <label><input type="radio" name="pain" value="20,5,10"> 労働中に軽い痛み</label><br>
+      <label><input type="radio" name="pain" value="15,4,5"> 日常生活動作で痛み</label><br>
+      <label><input type="radio" name="pain" value="10,2,5"> 軽い痛み＋夜間痛/鎮痛薬</label><br>
+      <label><input type="radio" name="pain" value="5,1,0"> 強い疼痛、頻繁の夜間痛、頻繁に鎮痛薬</label><br>
+      <label><input type="radio" name="pain" value="0,1,0"> 上肢を使えない</label>
+    </div>
+
+    <p>ASES用VASスコア（0〜10）：</p>
+    <input type="range" id="asesVAS" min="0" max="10" step="1" value="0">
+    <span id="vasValue">0</span>
+
+    <div id="painScores">
+      <p>JOA: <span id="painJOA">-</span></p>
+      <p>UCLA: <span id="painUCLA">-</span></p>
+      <p>Constant: <span id="painConstant">-</span></p>
+      <p>ASES: <span id="painASES">-</span></p>
+    </div>
+
+    <button class="btn" id="savePain">保存</button>
+    <button class="btn btn-secondary" data-page="start">戻る</button>
+  </div>
+
+  <!-- 集計ページ -->
+  <div id="page-summary" class="page">
+    <h1>集計</h1>
+    <div style="display:inline-block; text-align:left;">
+      <p>JOA 合計: <span id="totalJOA">0</span></p>
+      <p>ASES 合計: <span id="totalASES">0</span></p>
+      <p>UCLA 合計: <span id="totalUCLA">0</span></p>
+      <p>Constant 合計: <span id="totalConstant">0</span></p>
+    </div>
+    <button class="btn btn-secondary" data-page="start">戻る</button>
+  </div>
+
+  <script>
+  let scoreJOA = { pain:0 }, scoreASES = { pain:0 }, scoreUCLA = { pain:0 }, scoreConstant = { pain:0 };
+
+  function goToPage(pageId){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-'+pageId).classList.add('active');
+    if(pageId==='summary') calculateTotals();
+  }
+
+  function savePainScore(){
+    let val = document.querySelector('input[name="pain"]:checked');
+    if(val){
+      let parts = val.value.split(',');
+      scoreJOA.pain = parseInt(parts[0]);
+      scoreUCLA.pain = parseInt(parts[1]);
+      scoreConstant.pain = parseInt(parts[2]);
+      document.getElementById('painJOA').innerText = scoreJOA.pain;
+      document.getElementById('painUCLA').innerText = scoreUCLA.pain;
+      document.getElementById('painConstant').innerText = scoreConstant.pain;
+    }
+    let vas = document.getElementById('asesVAS').value;
+    scoreASES.pain = (10 - parseInt(vas)) * 5;
+    document.getElementById('painASES').innerText = scoreASES.pain;
+  }
+
+  function calculateTotals(){
+    document.getElementById('totalJOA').innerText = scoreJOA.pain;
+    document.getElementById('totalASES').innerText = scoreASES.pain;
+    document.getElementById('totalUCLA').innerText = scoreUCLA.pain;
+    document.getElementById('totalConstant').innerText = scoreConstant.pain;
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelectorAll('[data-page]').forEach(btn=>{
+      btn.addEventListener('touchstart', ()=>{
+        goToPage(btn.getAttribute('data-page'));
+      });
+      btn.addEventListener('click', ()=>{
+        goToPage(btn.getAttribute('data-page'));
+      });
+    });
+    document.getElementById('savePain').addEventListener('click', savePainScore);
+    document.getElementById('asesVAS').addEventListener('input', e => {
+      document.getElementById('vasValue').innerText = e.target.value;
+    });
+  });
+  </script>
+
+</body>
+</html>
