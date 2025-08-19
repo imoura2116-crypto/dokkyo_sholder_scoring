@@ -56,6 +56,104 @@
     <button class="btn btn-secondary" data-page="start">戻る</button>
   </div>
 
+<!-- ADLページ -->
+<div id="page-adl" style="display:none;">
+  <h1>ADL</h1>
+  <form id="adlForm">
+    <p>各動作について、難易度を選択してください（0:不可, 1:困難, 2:やや困難, 3:容易）</p>
+
+    <h3>共通項目（JOA＋ASES）</h3>
+    <label>上着を着る:
+      <select name="adl_common1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>患側を下にして寝る:
+      <select name="adl_common2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>背中を洗う:
+      <select name="adl_common3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>尻を拭く:
+      <select name="adl_common4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>髪をとかす:
+      <select name="adl_common5"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>高いところに手が届く:
+      <select name="adl_common6"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+
+    <h3>JOAのみ</h3>
+    <label>口に手が届く:
+      <select name="adl_joa1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>反対側腋窩に手が届く:
+      <select name="adl_joa2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>上衣ポケットに手が届く:
+      <select name="adl_joa3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>引き戸開閉:
+      <select name="adl_joa4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+
+    <h3>ASESのみ</h3>
+    <label>4.5kgを肩より上へ:
+      <select name="adl_ases1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>ボールをオーバースロー:
+      <select name="adl_ases2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>いつも通りの仕事:
+      <select name="adl_ases3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+    <label>いつもの通りのスポーツや娯楽:
+      <select name="adl_ases4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+    </label><br>
+
+    <h3>UCLA（肩に対する満足度）</h3>
+    <label><input type="radio" name="ucla_satisfaction" value="5"> 満足（5点）</label><br>
+    <label><input type="radio" name="ucla_satisfaction" value="0"> 不満（0点）</label><br>
+
+  </form>
+
+  <button class="btn" onclick="saveADL()">保存して戻る</button>
+</div>
+
+<script>
+  function saveADL(){
+    let totalCommon = 0, totalJOA = 0, totalASES = 0;
+    const form = document.getElementById('adlForm');
+
+    // 共通項目
+    for(let i=1;i<=6;i++){
+      totalCommon += parseInt(form["adl_common"+i].value);
+    }
+    // JOAのみ
+    for(let i=1;i<=4;i++){
+      totalJOA += parseInt(form["adl_joa"+i].value);
+    }
+    // ASESのみ
+    for(let i=1;i<=4;i++){
+      totalASES += parseInt(form["adl_ases"+i].value);
+    }
+    // UCLA（肩満足度）
+    let uclaSatisfaction = form["ucla_satisfaction"].value ? parseInt(form["ucla_satisfaction"].value) : 0;
+
+    // 換算スコア
+    scoreJOA.adl = Math.floor((totalCommon + totalJOA) / 3);      
+    scoreASES.adl = Math.floor((totalCommon + totalASES) * 5 / 3); 
+    scoreUCLA.satisfaction = uclaSatisfaction; // UCLAスコアに追加
+
+    goToPage('start');
+  }
+</script>
+
+
+
+
+
+
+
   <!-- 集計ページ -->
   <div id="page-summary" class="page">
     <h1>集計</h1>
