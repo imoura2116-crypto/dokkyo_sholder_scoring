@@ -2,217 +2,180 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Shoulder Score App</title>
+  <title>肩スコア</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!---------------------------------------- ここに style ---------------------------------------->
   <style>
-    body {font-family: sans-serif; background: #f8f8f8; margin: 0; padding: 0; text-align:center;}
-    h1 {margin: 1.2em 0;}
-    .btn {display:block; margin:12px auto; padding:15px; width:85%; max-width:320px; font-size:1.1em; border:none; border-radius:8px; background:#007aff; color:white; cursor:pointer; -webkit-tap-highlight-color:transparent;}
-    .btn-secondary {background:#555;}
-    .page {display:none; padding:1em;}
-    .active {display:block;}
+    body {
+      display: flex;
+      flex-direction: column;   /* 縦方向に並べる */
+      align-items: center;      /* 横中央 */
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;     /* タイトルとボタンの間隔 */}
+    button {
+      font-size: 1.5em;        /* ボタン文字大きめ */
+      padding: 15px 30px;      /* 内側余白 */
+      border-radius: 10px;     /* 角を丸く */
+      border: none;            /* 枠線消す */
+      background-color: #007bff; /* 青色 */
+      color: white;            /* 文字は白 */
+}
+    button:active {background-color: #0056b3; /* 押したときに少し濃い色 */}
+.section {display: none;   /* 基本は非表示 */}
+.active {display: block;  /* 表示するやつだけ block */
+  .redButton {
+    background-color: red;
+    color: white;
+  }
+  .redButton:active {
+    background-color: darkred;
+  }
   </style>
 </head>
+
+
+
 <body>
+  <!---------------------------------------- ここに botan ---------------------------------------->
+<div id="home" class="section active">
+  <h1>肩スコア</h1>
+  <button onclick="showSection('pain')">＜Pain＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('adl')">＜ADL＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('str')">＜Strength＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('rom')">＜ROM＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('xp')">＜Xp所見＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+<button class="redButton" onclick="showSection('result')">＜集計＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+</div>
+  <!---------------------------------------- ここに ページ ---------------------------------------->
 
-  <!-- スタートページ -->
-  <div id="page-start" class="page active">
-    <h1>Shoulder Score</h1>
-    <button class="btn" data-page="pain">Pain</button>
-    <button class="btn" data-page="adl">ADL</button>
-    <button class="btn" data-page="function">Function</button>
-    <button class="btn" data-page="strength">Strength</button>
-    <button class="btn" data-page="rom">ROM</button>
-    <button class="btn" data-page="xp">Xp所見</button>
-    <button class="btn btn-secondary" data-page="summary">集計</button>
+
+<div id="pain" class="section">
+  <h1>Painスコア入力</h1>
+
+  <!-- ASES: VAS入力 -->
+  <p>ASES (VAS 0〜10)<br>
+    <input type="number" id="asesVAS" min="0" max="10" value="0"> /10
+  </p>
+
+  <!-- 他スコア: チェックボックスで1つ選択 -->
+  <p>疼痛の程度を選んでください</p>
+  <label><input type="radio" name="painLevel" value="0"> 疼痛なし</label><br>
+  <label><input type="radio" name="painLevel" value="1"> スポーツ中・重労働で軽い痛み</label><br>
+  <label><input type="radio" name="painLevel" value="2"> 労働中に軽い痛み</label><br>
+  <label><input type="radio" name="painLevel" value="3"> 日常生活動作で痛み</label><br>
+  <label><input type="radio" name="painLevel" value="4"> 耐えられる軽い痛み（夜間痛・鎮痛剤使用）</label><br>
+  <label><input type="radio" name="painLevel" value="5"> 強い疼痛（頻繁な夜間痛・鎮痛剤使用）</label><br>
+  <label><input type="radio" name="painLevel" value="6"> 上肢を使えない</label><br>
+
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="savePain()">保存</button>
+  <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('home')">閉じる</button>
+</div>
+</div>   <!-- ← ここで pain セクションを閉じる -->
+
+
+
+<div id="adl" class="section">
+  <h1>ADLスコア入力</h1>
+  <div style="text-align:center;">
+    <button onclick="showSection('home')">閉じる</button>
   </div>
+</div>   <!-- ← ここで adl セクションを閉じる -->
 
-  <!-- Painページ -->
-  <div id="page-pain" class="page">
-    <h1>Pain</h1>
-    <p>痛みの状態を選択してください：</p>
-    <div style="display:inline-block; text-align:left;">
-      <label><input type="radio" name="pain" value="30,10,15"> 疼痛なし</label><br>
-      <label><input type="radio" name="pain" value="25,8,10"> スポーツ、重労働で軽い痛み</label><br>
-      <label><input type="radio" name="pain" value="20,5,10"> 労働中に軽い痛み</label><br>
-      <label><input type="radio" name="pain" value="15,4,5"> 日常生活動作で痛み</label><br>
-      <label><input type="radio" name="pain" value="10,2,5"> 軽い痛み＋夜間痛/鎮痛薬</label><br>
-      <label><input type="radio" name="pain" value="5,1,0"> 強い疼痛、頻繁の夜間痛、頻繁に鎮痛薬</label><br>
-      <label><input type="radio" name="pain" value="0,1,0"> 上肢を使えない</label>
-    </div>
-
-    <p>ASES用VASスコア（0〜10）：</p>
-    <input type="range" id="asesVAS" min="0" max="10" step="1" value="0">
-    <span id="vasValue">0</span>
-
-    <div id="painScores">
-      <p>JOA: <span id="painJOA">-</span></p>
-      <p>UCLA: <span id="painUCLA">-</span></p>
-      <p>Constant: <span id="painConstant">-</span></p>
-      <p>ASES: <span id="painASES">-</span></p>
-    </div>
-
-    <button class="btn" id="savePain">保存</button>
-    <button class="btn btn-secondary" data-page="start">戻る</button>
+<div id="str" class="section">
+  <h1>Strengthスコア入力</h1>
+  <div style="text-align:center;">
+    <button onclick="showSection('home')">閉じる</button>
   </div>
+</div>   <!-- ← ここで str セクションを閉じる -->
 
-<!-- ADLページ -->
-<div id="page-adl" style="display:none;">
-  <h1>ADL</h1>
-  <form id="adlForm">
-    <p>各動作について、難易度を選択してください（0:不可, 1:困難, 2:やや困難, 3:容易）</p>
-
-    <h3>共通項目（JOA＋ASES）</h3>
-    <label>上着を着る:
-      <select name="adl_common1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>患側を下にして寝る:
-      <select name="adl_common2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>背中を洗う:
-      <select name="adl_common3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>尻を拭く:
-      <select name="adl_common4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>髪をとかす:
-      <select name="adl_common5"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>高いところに手が届く:
-      <select name="adl_common6"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-
-    <h3>JOAのみ</h3>
-    <label>口に手が届く:
-      <select name="adl_joa1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>反対側腋窩に手が届く:
-      <select name="adl_joa2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>上衣ポケットに手が届く:
-      <select name="adl_joa3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>引き戸開閉:
-      <select name="adl_joa4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-
-    <h3>ASESのみ</h3>
-    <label>4.5kgを肩より上へ:
-      <select name="adl_ases1"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>ボールをオーバースロー:
-      <select name="adl_ases2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>いつも通りの仕事:
-      <select name="adl_ases3"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-    <label>いつもの通りのスポーツや娯楽:
-      <select name="adl_ases4"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-    </label><br>
-
-    <h3>UCLA（肩に対する満足度）</h3>
-    <label><input type="radio" name="ucla_satisfaction" value="5"> 満足（5点）</label><br>
-    <label><input type="radio" name="ucla_satisfaction" value="0"> 不満（0点）</label><br>
-
-  </form>
-
-  <button class="btn" onclick="saveADL()">保存して戻る</button>
+<div id="rom" class="section">
+  <h1>ROMスコア入力</h1>
+  <div style="text-align:center;">
+    <button onclick="showSection('home')">閉じる</button>
+  </div>
+</div>   <!-- ← ここで rom セクションを閉じる -->
 </div>
 
-<script>
-  function saveADL(){
-    let totalCommon = 0, totalJOA = 0, totalASES = 0;
-    const form = document.getElementById('adlForm');
-
-    // 共通項目
-    for(let i=1;i<=6;i++){
-      totalCommon += parseInt(form["adl_common"+i].value);
-    }
-    // JOAのみ
-    for(let i=1;i<=4;i++){
-      totalJOA += parseInt(form["adl_joa"+i].value);
-    }
-    // ASESのみ
-    for(let i=1;i<=4;i++){
-      totalASES += parseInt(form["adl_ases"+i].value);
-    }
-    // UCLA（肩満足度）
-    let uclaSatisfaction = form["ucla_satisfaction"].value ? parseInt(form["ucla_satisfaction"].value) : 0;
-
-    // 換算スコア
-    scoreJOA.adl = Math.floor((totalCommon + totalJOA) / 3);      
-    scoreASES.adl = Math.floor((totalCommon + totalASES) * 5 / 3); 
-    scoreUCLA.satisfaction = uclaSatisfaction; // UCLAスコアに追加
-
-    goToPage('start');
-  }
-</script>
-
-
-
-
-
-
-
-  <!-- 集計ページ -->
-  <div id="page-summary" class="page">
-    <h1>集計</h1>
-    <div style="display:inline-block; text-align:left;">
-      <p>JOA 合計: <span id="totalJOA">0</span></p>
-      <p>ASES 合計: <span id="totalASES">0</span></p>
-      <p>UCLA 合計: <span id="totalUCLA">0</span></p>
-      <p>Constant 合計: <span id="totalConstant">0</span></p>
-    </div>
-    <button class="btn btn-secondary" data-page="start">戻る</button>
+<div id="xp" class="section">
+  <h1>Xp、不安定性</h1>
+  <div style="text-align:center;">
+    <button onclick="showSection('home')">閉じる</button>
   </div>
+</div>   <!-- ← ここで xp セクションを閉じる -->
+</div>
 
+<div id="result" class="section">
+  <h1>集計</h1>
+  <div style="text-align:center;">
+    <button onclick="showSection('home')">閉じる</button>
+  </div>
+</div>   <!-- ← ここで 集計 セクションを閉じる -->
+</div>
+
+  <!---------------------------------------- ここに JavaScript ---------------------------------------->
   <script>
-  let scoreJOA = { pain:0 }, scoreASES = { pain:0 }, scoreUCLA = { pain:0 }, scoreConstant = { pain:0 };
-
-  function goToPage(pageId){
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-'+pageId).classList.add('active');
-    if(pageId==='summary') calculateTotals();
-  }
-
-  function savePainScore(){
-    let val = document.querySelector('input[name="pain"]:checked');
-    if(val){
-      let parts = val.value.split(',');
-      scoreJOA.pain = parseInt(parts[0]);
-      scoreUCLA.pain = parseInt(parts[1]);
-      scoreConstant.pain = parseInt(parts[2]);
-      document.getElementById('painJOA').innerText = scoreJOA.pain;
-      document.getElementById('painUCLA').innerText = scoreUCLA.pain;
-      document.getElementById('painConstant').innerText = scoreConstant.pain;
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
     }
-    let vas = document.getElementById('asesVAS').value;
-    scoreASES.pain = (10 - parseInt(vas)) * 5;
-    document.getElementById('painASES').innerText = scoreASES.pain;
-  }
+<!---------------------------------------- 変数の宣言 ---------------------------------------->
 
-  function calculateTotals(){
-    document.getElementById('totalJOA').innerText = scoreJOA.pain;
-    document.getElementById('totalASES').innerText = scoreASES.pain;
-    document.getElementById('totalUCLA').innerText = scoreUCLA.pain;
-    document.getElementById('totalConstant').innerText = scoreConstant.pain;
-  }
+let scores = { 
+joa:{pain:0,adl:0,rom:0,strength:0,Xp:0}, 
+ases:{pain:0,adl:0,rom:0,strength:0}, 
+constant:{pain:0,adl:0,rom:0,strength:0}, 
+ucla:{pain:0,adl:0,rom:0,strength:0} };
 
-  document.addEventListener('DOMContentLoaded', ()=>{
-    document.querySelectorAll('[data-page]').forEach(btn=>{
-      btn.addEventListener('touchstart', ()=>{
-        goToPage(btn.getAttribute('data-page'));
-      });
-      btn.addEventListener('click', ()=>{
-        goToPage(btn.getAttribute('data-page'));
-      });
-    });
-    document.getElementById('savePain').addEventListener('click', savePainScore);
-    document.getElementById('asesVAS').addEventListener('input', e => {
-      document.getElementById('vasValue').innerText = e.target.value;
-    });
-  });
+<!---------------------------------------- Pain集計 ---------------------------------------->
+
+function savePain() {
+  // ASES (VAS)
+  let asesVAS = parseInt(document.getElementById("asesVAS").value);
+  scores.ases.pain = (10 - asesVAS) * 5;  // 10-VAS を 50点満点換算
+
+  // チェックボックスで選んだ painLevel
+  let level = document.querySelector('input[name="painLevel"]:checked').value;
+
+  // 対応表
+  const table = [
+    { joa:30, ucla:10, constant:15 }, // 疼痛なし
+    { joa:25, ucla: 8, constant:10 }, // スポーツ中...
+    { joa:20, ucla: 6, constant:10 }, // 労働中...
+    { joa:15, ucla: 4, constant: 5 }, // 日常生活...
+    { joa:10, ucla: 2, constant: 5 }, // 耐えられる...
+    { joa: 5, ucla: 1, constant: 0 }, // 強い疼痛...
+    { joa: 0, ucla: 0, constant: 0 }  // 上肢を使えない
+  ];
+
+  let row = table[level];
+  scores.joa.pain = row.joa;
+  scores.ucla.pain = row.ucla;
+  scores.constant.pain = row.constant;
+
+  alert("Painスコアを保存しました");
+}
+
   </script>
-
 </body>
 </html>
+
+
+
+
+
+
