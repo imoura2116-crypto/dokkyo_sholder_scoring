@@ -75,7 +75,8 @@ fieldset {
 
 
 <div id="pain" class="section">
-  <h1>Painスコア入力</h1>
+ <div style="text-align:center;">
+  <h1>Pain</h1>
 
   <!-- ASES: VAS入力 -->
   <p>ASES (VAS 0〜10)<br>
@@ -83,7 +84,7 @@ fieldset {
   </p>
 
   <!-- 他スコア: チェックボックスで1つ選択 -->
-  <p>疼痛の程度を選んでください</p>
+  <p>●疼痛の程度</p>
   <label><input type="radio" name="painLevel" value="0"> 疼痛なし</label><br>
   <label><input type="radio" name="painLevel" value="1"> スポーツ中・重労働で軽い痛み</label><br>
   <label><input type="radio" name="painLevel" value="2"> 労働中に軽い痛み</label><br>
@@ -106,12 +107,13 @@ fieldset {
   <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('home')">閉じる</button>
 </div>
+</div>
 </div>   <!-- ← ここで pain セクションを閉じる ------------------------------------------------------------------>
 
 <div id="adl" class="section">
   <div style="text-align:center;">
 
-  <h1>ADLスコア入力</h1>
+  <h1>ADL</h1>
 
 UCLA 肩機能の満足度<br>
   <label><input type="radio" name="uclaSatisfaction" value="5"> 満足（5点）</label><br>
@@ -211,9 +213,8 @@ JOA及びASES<br>
   </fieldset>
 
   <div style="text-align:center;">
-  <button onclick="saveUclaAdl()">保存</button>
-    <button onclick="showSection('home')">閉じる</button>
-  </div>
+
+ 
 
   <!-- 保存後に表示 -->
   <div id="uclaAdlResult">
@@ -221,6 +222,9 @@ JOA及びASES<br>
     <p>JOA-ADL: <span id="joaAdlScore">-</span></p>
     <p>ASES-ADL: <span id="asesAdlScore">-</span></p>
   </div>
+  <button onclick="saveUclaAdl()">保存</button>
+    <button onclick="showSection('home')">閉じる</button>
+</div>
 </div>
 </div>   <!-- ← ここで adl セクションを閉じる ------------------------------------------>
 
@@ -275,10 +279,7 @@ JOA及びASES<br>
     <label><input type="radio" name="ucla_func" value="2">軽い動作のみ可能(2)</label>
     <label><input type="radio" name="ucla_func" value="0">上肢を使えない(1)</label>
   </fieldset>
-<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
-  <button onclick="saveFunction()">保存</button>
-<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
-  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
+
 
   <!-- 保存後の表示 -->
   <div id="functionResult">
@@ -286,6 +287,10 @@ JOA及びASES<br>
     <p>Constant-Function: <span id="constantFunctionScore">0</span> 点</p>
     <p>UCLA-Function: <span id="uclaFunctionScore">0</span> 点</p>
   </div>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="saveFunction()">保存</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
 </div>
 </div>   <!-- ← ここで func セクションを閉じる ------------------------------------------>
 
@@ -318,19 +323,22 @@ JOA及びASES<br>
     <label><input type="radio" name="const_abdkg" value="0">0kg(0)</label>
   </fieldset>
 
-  <button onclick="saveStrength()">保存</button>
-  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
+
 
   <!-- 保存後表示 -->
   <div id="strengthResult">
     <p>UCLA-Strength: <span id="uclaStrengthScore">0</span> 点</p>
     <p>Constant-Strength: <span id="constantStrengthScore">0</span> 点</p>
   </div>
+  <button onclick="saveStrength()">保存</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
 </div>
 
 </div>   <!-- ← ここで str セクションを閉じる ------------------------------------------>
 
 <div id="rom" class="section">
+<div style="text-align:center;">
   <h1>ROM</h1>
 
   <!-- 挙上 -->
@@ -424,11 +432,13 @@ JOA及びASES<br>
 <br>
 <button onclick="updateRomScores()">保存</button>
 <button onclick="showSection('home')">閉じる</button>
+</div>
 </div>   
 <!-- ← ここで rom セクションを閉じる -------------------------------------------->
 
 
 <div id="xp" class="section">
+<div style="text-align:center;">
   <h1>Xp評価 (JOAのみ)</h1>
 
   <!-- X線所見評価 -->
@@ -447,8 +457,10 @@ JOA及びASES<br>
 
   <p>JOA Xp合計: <span id="joa-xp-score">0</span></p>
 
-  <button onclick="updateXpScore()">保存</button><br>
+  <button onclick="updateXpScore()">保存</button>
+
   <button onclick="showSection('home')">閉じる</button>
+</div>
 </div>
 
 <!-- ← ここで xp セクションを閉じる -------------------------------------------->
