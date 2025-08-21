@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!---------------------------------------- ここに style ---------------------------------------->
   <style>
+
+label {
+  display: inline-block;   /* 横並びだけどブロック扱い */
+  margin: 5px 0;
+  white-space: normal;     /* 折り返しOK */
+  word-break: break-word;  /* 長い単語でも折り返す */
+}
+fieldset {
+  max-width: 100%;         /* 親幅を超えない */
+}
     body {
       display: flex;
       flex-direction: column;   /* 縦方向に並べる */
@@ -43,6 +53,7 @@
 <body>
   <!---------------------------------------- ここに botan ---------------------------------------->
 <div id="home" class="section active">
+  <div style="text-align:center;">
   <h1>肩スコア</h1>
   <button onclick="showSection('pain')">＜Pain＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
@@ -58,6 +69,7 @@
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
 <button class="redButton" onclick="showResults(); showSection('result')">＜集計＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+</div>
 </div>
   <!---------------------------------------- ここに ページ ---------------------------------------->
 
@@ -263,8 +275,9 @@ JOA及びASES<br>
     <label><input type="radio" name="ucla_func" value="2">軽い動作のみ可能(2)</label>
     <label><input type="radio" name="ucla_func" value="0">上肢を使えない(1)</label>
   </fieldset>
-
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="saveFunction()">保存</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
 
   <!-- 保存後の表示 -->
@@ -276,28 +289,172 @@ JOA及びASES<br>
 </div>
 </div>   <!-- ← ここで func セクションを閉じる ------------------------------------------>
 
+<!-- Strength セクション（UCLA / Constant） -->
 <div id="str" class="section">
-  <h1>Strengthスコア入力</h1>
-  <div style="text-align:center;">
-    <button onclick="showSection('home')">閉じる</button>
+<div style="text-align:center;">
+  <h1>Strength（筋力）</h1>
+
+  <!-- UCLA (/5) 挙上MMT -->
+  <fieldset><legend>UCLA：挙上MMT（0–5）</legend>
+    <label><input type="radio" name="ucla_mmt" value="0">0</label>
+    <label><input type="radio" name="ucla_mmt" value="1">1</label>
+    <label><input type="radio" name="ucla_mmt" value="2">2</label>
+    <label><input type="radio" name="ucla_mmt" value="3">3</label>
+    <label><input type="radio" name="ucla_mmt" value="4">4</label>
+    <label><input type="radio" name="ucla_mmt" value="5">5</label>
+  </fieldset>
+
+  <!-- Constant (/25) 外転筋力(kg) → 点数 -->
+  <fieldset><legend>Constant：外転筋力（kg）</legend>
+    <label><input type="radio" name="const_abdkg" value="25">12kg以上(25)</label>
+    <label><input type="radio" name="const_abdkg" value="23">10–11kg(23)</label>
+    <label><input type="radio" name="const_abdkg" value="20">8–9kg(20)</label>
+    <label><input type="radio" name="const_abdkg" value="17">7kg(17)</label>
+    <label><input type="radio" name="const_abdkg" value="14">6kg(14)</label>
+    <label><input type="radio" name="const_abdkg" value="11">4–5kg(11)</label>
+    <label><input type="radio" name="const_abdkg" value="8">3kg(8)</label>
+    <label><input type="radio" name="const_abdkg" value="5">2kg(5)</label>
+    <label><input type="radio" name="const_abdkg" value="2">0.5kg(2)</label>
+    <label><input type="radio" name="const_abdkg" value="0">0kg(0)</label>
+  </fieldset>
+
+  <button onclick="saveStrength()">保存</button>
+  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
+
+  <!-- 保存後表示 -->
+  <div id="strengthResult">
+    <p>UCLA-Strength: <span id="uclaStrengthScore">0</span> 点</p>
+    <p>Constant-Strength: <span id="constantStrengthScore">0</span> 点</p>
   </div>
+</div>
+
 </div>   <!-- ← ここで str セクションを閉じる ------------------------------------------>
 
 <div id="rom" class="section">
-  <h1>ROMスコア入力</h1>
-  <div style="text-align:center;">
-    <button onclick="showSection('home')">閉じる</button>
-  </div>
-</div>   <!-- ← ここで rom セクションを閉じる -->
-</div>
+  <h1>ROM</h1>
+
+  <!-- 挙上 -->
+    ●挙上：
+    <label>角度入力: <input type="number" id="elevationInput" min="0" max="180"> °</label>
+<br>
+    ●外転：
+    <label>角度入力: <input type="number" id="abductionInput" min="0" max="180"> °</label>
+<br>
+<br>
+  <!-- Constant 外旋 -->
+    ●外旋（Constant)<br>
+    <label><input type="checkbox" class="const-er" value="2"> 手は頭後方・肘は前方</label><br>
+    <label><input type="checkbox" class="const-er" value="2"> 手は頭後方・肘は広げて</label><br>
+    <label><input type="checkbox" class="const-er" value="2"> 手は頭上・肘は前方</label><br>
+    <label><input type="checkbox" class="const-er" value="2"> 手は頭上・肘は広げて</label><br>
+    <label><input type="checkbox" class="const-er" value="2"> 完全に挙上できる</label><br>
+
+    ●外旋 (JOA)<br>
+  <label>
+    <input type="radio" name="joa_external" value="9">
+    60°以上（9点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_external" value="6">
+    30°以上（6点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_external" value="3">
+    0°以上（3点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_external" value="1">
+    -20°以上（1点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_external" value="0">
+    -20°以下（0点）
+  </label>
+<br>
+  ●内旋 (JOA)<br>
+  <label>
+    <input type="radio" name="joa_internal" value="6">
+    Th12以上（6点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_internal" value="4">
+    L5以上（4点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_internal" value="2">
+    臀部（2点）
+  </label><br>
+  <label>
+    <input type="radio" name="joa_internal" value="0">
+    それ以下（0点）
+  </label><br>
+  ●内旋 (Constant)<br>
+  <label>
+    <input type="radio" name="constant_internal" value="10">
+    肩甲骨間（10点）
+  </label><br>
+  <label>
+    <input type="radio" name="constant_internal" value="8">
+    Th12（8点）
+  </label><br>
+  <label>
+    <input type="radio" name="constant_internal" value="6">
+    L3（6点）
+  </label><br>
+  <label>
+    <input type="radio" name="constant_internal" value="4">
+    L5/S（4点）
+  </label><br>
+  <label>
+    <input type="radio" name="constant_internal" value="2">
+    臀部（2点）
+  </label><br>
+  <label>
+    <input type="radio" name="constant_internal" value="0">
+    大腿外側（0点）
+  </label><br><br>
+
+  
+  <!-- ここまでに挙上・外転・外旋・内旋の入力フォームが並ぶ -->
+
+  <p>JOA ROM: <span id="joa-rom-score">0</span></p>
+  <p>Constant ROM: <span id="constant-rom-score">0</span></p>
+  <p>UCLA ROM: <span id="ucla-rom-score">0</span></p>
+
+<br>
+<button onclick="updateRomScores()">保存</button>
+<button onclick="showSection('home')">閉じる</button>
+</div>   
+<!-- ← ここで rom セクションを閉じる -------------------------------------------->
+
 
 <div id="xp" class="section">
-  <h1>Xp、不安定性</h1>
-  <div style="text-align:center;">
-    <button onclick="showSection('home')">閉じる</button>
-  </div>
-</div>   <!-- ← ここで xp セクションを閉じる -->
+  <h1>Xp評価 (JOAのみ)</h1>
+
+  <!-- X線所見評価 -->
+  <h3>IV X線所見評価（5点）</h3>
+  <label><input type="radio" name="joa_xp_findings" value="5"> 正常（5点）</label><br>
+  <label><input type="radio" name="joa_xp_findings" value="3"> 中等度の変化または亜脱臼（3点）</label><br>
+  <label><input type="radio" name="joa_xp_findings" value="1"> 高度の変化または脱臼（1点）</label><br>
+  <label><input type="radio" name="joa_xp_findings" value="0"> 評価不能 / 未選択（0点）</label><br><br>
+
+  <!-- 関節安定性 -->
+  <h3>V 関節安定性（15点）</h3>
+  <label><input type="radio" name="joa_stability" value="15"> 正常（15点）</label><br>
+  <label><input type="radio" name="joa_stability" value="10"> 軽度のinstability または脱臼不安感（10点）</label><br>
+  <label><input type="radio" name="joa_stability" value="5"> 重度のinstability または亜脱臼の既往・状態（5点）</label><br>
+  <label><input type="radio" name="joa_stability" value="0"> 脱臼の既往または状態（0点）</label><br><br>
+
+  <p>JOA Xp合計: <span id="joa-xp-score">0</span></p>
+
+  <button onclick="updateXpScore()">保存</button><br>
+  <button onclick="showSection('home')">閉じる</button>
 </div>
+
+<!-- ← ここで xp セクションを閉じる -------------------------------------------->
+
+
+
 
 <div id="result" class="section">
   <h1>集計結果</h1>
@@ -322,10 +479,10 @@ JOA及びASES<br>
 <!---------------------------------------- 変数の宣言 ---------------------------------------->
 
 let scores = { 
-joa:{pain:0,adl:0,func:0,rom:0,strength:0,Xp:0}, 
-ases:{pain:0,adl:0,func:0,rom:0,strength:0}, 
-constant:{pain:0,adl:0,func:0,rom:0,strength:0}, 
-ucla:{pain:0,adl:0,func:0,rom:0,strength:0} };
+joa:{pain:0,adl:0,function:0,rom:0,Xp:0}, 
+ases:{pain:0,adl:0}, 
+constant:{pain:0,adl:0,function:0,rom:0,strength:0}, 
+ucla:{pain:0,function:0,rom:0,strength:0} };
 
 <!---------------------------------------- Pain集計 ---------------------------------------->
 
@@ -414,6 +571,122 @@ function saveFunction(){
   document.getElementById('uclaFunctionScore').textContent = uclaF;
 }
 
+// Strength 保存-----------------------------------------------------------------------------------
+function saveStrength(){
+  const getVal = (name) => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? parseInt(el.value,10) : 0;
+  };
+
+  const uclaS = getVal('ucla_mmt');       // /5
+  const constS = getVal('const_abdkg');   // /25（ラジオ値=点数）
+
+  scores.ucla.strength = uclaS;
+  scores.constant.strength = constS;
+
+  document.getElementById('uclaStrengthScore').textContent = uclaS;
+  document.getElementById('constantStrengthScore').textContent = constS;
+}
+
+
+// --- 挙上 --------------------------------------------------------------------------------------
+document.getElementById("elevationInput").addEventListener("input", e => {
+  const deg = parseInt(e.target.value) || 0;
+  let joa=0, constant=0, ucla=0;
+
+  if (deg >= 151) { joa=15; constant=10; ucla=5; }
+  else if (deg >= 121) { joa=12; constant=8; ucla=4; }
+  else if (deg >= 91) { joa=9; constant=6; ucla=3; }
+  else if (deg >= 61) { joa=6; constant=4; ucla=2; }
+  else if (deg >= 45) { joa=3; constant=2; ucla=2; }
+  else if (deg >= 30) { joa=3; constant=2; ucla=1; }
+  else { joa=0; constant=0; ucla=0; }
+
+  document.getElementById("joa-elev").textContent = joa;
+  document.getElementById("const-elev").textContent = constant;
+  document.getElementById("ucla-elev").textContent = ucla;
+});
+// --- 外転（Constantのみ） ------------------------------------------------------------------------
+document.getElementById("abductionInput").addEventListener("input", e => {
+  const deg = parseInt(e.target.value) || 0;
+  let constant=0;
+
+  if (deg >= 151) { constant=10; }
+  else if (deg >= 121) { constant=8; }
+  else if (deg >= 91) { constant=6; }
+  else if (deg >= 61) { constant=4; }
+  else if (deg >= 31) { constant=2; }
+  else { constant=0; }
+
+  document.getElementById("const-abd").textContent = constant;
+});
+// --- Constant 外旋 ------------------------------------------------------------------------------
+document.querySelectorAll(".const-er").forEach(cb => {
+  cb.addEventListener("change", () => {
+    let sum = 0;
+    document.querySelectorAll(".const-er:checked").forEach(c => {
+      sum += parseInt(c.value);
+    });
+    document.getElementById("const-er-score").textContent = sum;
+  });
+});
+function updateRomScores() {
+  // --- 挙上 ---
+  const elevDeg = parseInt(document.getElementById("elevationInput").value) || 0;
+  let joaElev=0, constElev=0, uclaElev=0;
+
+  if (elevDeg >= 151) { joaElev=15; constElev=10; uclaElev=5; }
+  else if (elevDeg >= 121) { joaElev=12; constElev=8; uclaElev=4; }
+  else if (elevDeg >= 91) { joaElev=9; constElev=6; uclaElev=3; }
+  else if (elevDeg >= 61) { joaElev=6; constElev=4; uclaElev=2; }
+  else if (elevDeg >= 45) { joaElev=3; constElev=2; uclaElev=2; }
+  else if (elevDeg >= 30) { joaElev=3; constElev=2; uclaElev=1; }
+  else { joaElev=0; constElev=0; uclaElev=0; }
+
+  // --- 外転 (Constantのみ) ---
+  const abdDeg = parseInt(document.getElementById("abductionInput").value) || 0;
+  let constAbd=0;
+  if (abdDeg >= 151) constAbd=10;
+  else if (abdDeg >= 121) constAbd=8;
+  else if (abdDeg >= 91) constAbd=6;
+  else if (abdDeg >= 61) constAbd=4;
+  else if (abdDeg >= 31) constAbd=2;
+
+  // --- 外旋 (Constant: checkboxes) ---
+  let constER=0;
+  document.querySelectorAll(".const-er:checked").forEach(cb => {
+    constER += parseInt(cb.value);
+  });
+
+  // --- 外旋 (JOA: radio) ---
+  let joaER = parseInt(document.querySelector("input[name='joa_external']:checked")?.value || 0);
+
+  // --- 内旋 (JOA: radio) ---
+  let joaIR = parseInt(document.querySelector("input[name='joa_internal']:checked")?.value || 0);
+
+  // --- 内旋 (Constant: radio) ---
+  let constIR = parseInt(document.querySelector("input[name='constant_internal']:checked")?.value || 0);
+
+  // --- 合計して scores に格納 ---
+  scores.joa.rom = joaElev + joaER + joaIR;
+  scores.constant.rom = constElev + constAbd + constER + constIR;
+  scores.ucla.rom = uclaElev;
+  // ASESはROM評価なし（そのまま0）
+
+  // --- 表示更新 ---
+  document.getElementById("joa-rom-score").textContent = scores.joa.rom;
+  document.getElementById("constant-rom-score").textContent = scores.constant.rom;
+  document.getElementById("ucla-rom-score").textContent = scores.ucla.rom;
+}
+function updateXpScore() {
+  let findings = parseInt(document.querySelector("input[name='joa_xp_findings']:checked")?.value || 0);
+  let stability = parseInt(document.querySelector("input[name='joa_stability']:checked")?.value || 0);
+
+  let totalXp = findings + stability;
+  scores.joa.Xp = totalXp;
+
+  document.getElementById("joa-xp-score").textContent = totalXp;
+}
 
 <!---------------------------------------- Total集計 ---------------------------------------->
 function showResults() {
