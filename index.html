@@ -48,13 +48,15 @@
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('adl')">＜ADL＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+  <button onclick="showSection('func')">＜Function＞</button>
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('str')">＜Strength＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('rom')">＜ROM＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('xp')">＜Xp所見＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
-<button class="redButton" onclick="showSection('result')">＜集計＞</button>
+<button class="redButton" onclick="showResults(); showSection('result')">＜集計＞</button>
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
 </div>
   <!---------------------------------------- ここに ページ ---------------------------------------->
@@ -79,27 +81,207 @@
   <label><input type="radio" name="painLevel" value="6"> 上肢を使えない</label><br>
 
 <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
+<div id="painResult">
+  <p>ASES: <span id="asesPainScore">-</span></p>
+  <p>JOA: <span id="joaPainScore">-</span></p>
+  <p>UCLA: <span id="uclaPainScore">-</span></p>
+  <p>Constant: <span id="constantPainScore">-</span></p>
+</div>
+
+
+<div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="savePain()">保存</button>
   <div style="height:10px;"></div>  <!-- 高さ10pxの空白 -->
   <button onclick="showSection('home')">閉じる</button>
 </div>
-</div>   <!-- ← ここで pain セクションを閉じる -->
-
-
+</div>   <!-- ← ここで pain セクションを閉じる ------------------------------------------------------------------>
 
 <div id="adl" class="section">
-  <h1>ADLスコア入力</h1>
   <div style="text-align:center;">
+
+  <h1>ADLスコア入力</h1>
+
+UCLA 肩機能の満足度<br>
+  <label><input type="radio" name="uclaSatisfaction" value="5"> 満足（5点）</label><br>
+  <label><input type="radio" name="uclaSatisfaction" value="0"> 不満（0点）</label><br><br>
+
+JOA及びASES<br>
+(0=不可 / 1=かなり困難 / 2=やや困難 / 3=容易)<br><br>
+
+<!-- JOA+ASES 共通（6項目） -->
+  <fieldset><legend>上着を着る</legend>
+    <label><input type="radio" name="adl1" value="0">0</label>
+    <label><input type="radio" name="adl1" value="1">1</label>
+    <label><input type="radio" name="adl1" value="2">2</label>
+    <label><input type="radio" name="adl1" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>患側を下にして寝る</legend>
+    <label><input type="radio" name="adl2" value="0">0</label>
+    <label><input type="radio" name="adl2" value="1">1</label>
+    <label><input type="radio" name="adl2" value="2">2</label>
+    <label><input type="radio" name="adl2" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>背中を洗う</legend>
+    <label><input type="radio" name="adl3" value="0">0</label>
+    <label><input type="radio" name="adl3" value="1">1</label>
+    <label><input type="radio" name="adl3" value="2">2</label>
+    <label><input type="radio" name="adl3" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>尻を拭く</legend>
+    <label><input type="radio" name="adl4" value="0">0</label>
+    <label><input type="radio" name="adl4" value="1">1</label>
+    <label><input type="radio" name="adl4" value="2">2</label>
+    <label><input type="radio" name="adl4" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>髪をすかす</legend>
+    <label><input type="radio" name="adl5" value="0">0</label>
+    <label><input type="radio" name="adl5" value="1">1</label>
+    <label><input type="radio" name="adl5" value="2">2</label>
+    <label><input type="radio" name="adl5" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>高い所に手が届く</legend>
+    <label><input type="radio" name="adl6" value="0">0</label>
+    <label><input type="radio" name="adl6" value="1">1</label>
+    <label><input type="radio" name="adl6" value="2">2</label>
+    <label><input type="radio" name="adl6" value="3">3</label>
+  </fieldset>
+
+  <!-- JOA のみ（4項目） -->
+  <fieldset><legend>口に手が届く</legend>
+    <label><input type="radio" name="adl7" value="0">0</label>
+    <label><input type="radio" name="adl7" value="1">1</label>
+    <label><input type="radio" name="adl7" value="2">2</label>
+    <label><input type="radio" name="adl7" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>健側腋窩に手が届く</legend>
+    <label><input type="radio" name="adl8" value="0">0</label>
+    <label><input type="radio" name="adl8" value="1">1</label>
+    <label><input type="radio" name="adl8" value="2">2</label>
+    <label><input type="radio" name="adl8" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>上着サイドポケット</legend>
+    <label><input type="radio" name="adl9" value="0">0</label>
+    <label><input type="radio" name="adl9" value="1">1</label>
+    <label><input type="radio" name="adl9" value="2">2</label>
+    <label><input type="radio" name="adl9" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>引き戸開閉</legend>
+    <label><input type="radio" name="adl10" value="0">0</label>
+    <label><input type="radio" name="adl10" value="1">1</label>
+    <label><input type="radio" name="adl10" value="2">2</label>
+    <label><input type="radio" name="adl10" value="3">3</label>
+  </fieldset>
+
+  <!-- ASES のみ（4項目） -->
+  <fieldset><legend>4.5kg持ち上げ</legend>
+    <label><input type="radio" name="adl11" value="0">0</label>
+    <label><input type="radio" name="adl11" value="1">1</label>
+    <label><input type="radio" name="adl11" value="2">2</label>
+    <label><input type="radio" name="adl11" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>ボールをオーバースロー</legend>
+    <label><input type="radio" name="adl12" value="0">0</label>
+    <label><input type="radio" name="adl12" value="1">1</label>
+    <label><input type="radio" name="adl12" value="2">2</label>
+    <label><input type="radio" name="adl12" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>いつも通りの仕事</legend>
+    <label><input type="radio" name="adl13" value="0">0</label>
+    <label><input type="radio" name="adl13" value="1">1</label>
+    <label><input type="radio" name="adl13" value="2">2</label>
+    <label><input type="radio" name="adl13" value="3">3</label>
+  </fieldset>
+  <fieldset><legend>いつも通りのスポーツ・娯楽</legend>
+    <label><input type="radio" name="adl14" value="0">0</label>
+    <label><input type="radio" name="adl14" value="1">1</label>
+    <label><input type="radio" name="adl14" value="2">2</label>
+    <label><input type="radio" name="adl14" value="3">3</label>
+  </fieldset>
+
+  <div style="text-align:center;">
+  <button onclick="saveUclaAdl()">保存</button>
     <button onclick="showSection('home')">閉じる</button>
   </div>
-</div>   <!-- ← ここで adl セクションを閉じる -->
+
+  <!-- 保存後に表示 -->
+  <div id="uclaAdlResult">
+    <p>UCLA ADL スコア: <span id="uclaAdlScore">-</span></p>
+    <p>JOA-ADL: <span id="joaAdlScore">-</span></p>
+    <p>ASES-ADL: <span id="asesAdlScore">-</span></p>
+  </div>
+</div>
+</div>   <!-- ← ここで adl セクションを閉じる ------------------------------------------>
+
+<!-- Function セクション -->
+<div id="func" class="section">
+<div style="text-align:center;">
+  <h1>Function（総合機能）</h1>
+
+  <!-- JOA /10 -->
+  <fieldset><legend>JOA：90度以下での外転筋力</legend>
+    <label><input type="radio" name="joa_muscle" value="5">正常(5)</label>
+    <label><input type="radio" name="joa_muscle" value="4">優(4)</label>
+    <label><input type="radio" name="joa_muscle" value="3">良(3)</label>
+    <label><input type="radio" name="joa_muscle" value="2">可(2)</label>
+    <label><input type="radio" name="joa_muscle" value="1">不可(1)</label>
+    <label><input type="radio" name="joa_muscle" value="0">ゼロ(0)</label>
+  </fieldset>
+  <fieldset><legend>JOA：1㎏の伸展・回内・水平保持</legend>
+    <label><input type="radio" name="joa_hold" value="5">10秒以上(5)</label>
+    <label><input type="radio" name="joa_hold" value="3">3秒以上(3)</label>
+    <label><input type="radio" name="joa_hold" value="1">2秒以下(1)</label>
+    <label><input type="radio" name="joa_hold" value="0">不可(0)</label>
+  </fieldset>
+
+  <!-- Constant /20 -->
+  <fieldset><legend>Constant：仕事・家事</legend>
+    <label><input type="radio" name="const_work" value="4">支障なし(4)</label>
+    <label><input type="radio" name="const_work" value="0">支障あり(0)</label>
+  </fieldset>
+  <fieldset><legend>Constant：娯楽／スポーツ</legend>
+    <label><input type="radio" name="const_sport" value="4">支障なし(4)</label>
+    <label><input type="radio" name="const_sport" value="0">支障あり(0)</label>
+  </fieldset>
+  <fieldset><legend>Constant：睡眠（夜間痛）</legend>
+    <label><input type="radio" name="const_sleep" value="2">なし(2)</label>
+    <label><input type="radio" name="const_sleep" value="0">あり(0)</label>
+  </fieldset>
+  <fieldset><legend>Constant：手が届くか</legend>
+    <label><input type="radio" name="const_reach" value="10">頭上(10)</label>
+    <label><input type="radio" name="const_reach" value="8">頭頂部(8)</label>
+    <label><input type="radio" name="const_reach" value="6">口まで(6)</label>
+    <label><input type="radio" name="const_reach" value="4">胸まで(4)</label>
+    <label><input type="radio" name="const_reach" value="2">腰まで(2)</label>
+  </fieldset>
+
+  <!-- UCLA /10 -->
+  <fieldset><legend>UCLA：機能</legend>
+    <label><input type="radio" name="ucla_func" value="10">正常(10)</label>
+    <label><input type="radio" name="ucla_func" value="8">軽度な制限のみ(8)</label>
+    <label><input type="radio" name="ucla_func" value="6">家事・買物・運転・衣服着脱可能(6)</label>
+    <label><input type="radio" name="ucla_func" value="4">簡単な家事、ほとんどの日常動作可能(4)</label>
+    <label><input type="radio" name="ucla_func" value="2">軽い動作のみ可能(2)</label>
+    <label><input type="radio" name="ucla_func" value="0">上肢を使えない(1)</label>
+  </fieldset>
+
+  <button onclick="saveFunction()">保存</button>
+  <div style="text-align:center;"><button onclick="showSection('home')">閉じる</button></div>
+
+  <!-- 保存後の表示 -->
+  <div id="functionResult">
+    <p>JOA-Function: <span id="joaFunctionScore">0</span> 点</p>
+    <p>Constant-Function: <span id="constantFunctionScore">0</span> 点</p>
+    <p>UCLA-Function: <span id="uclaFunctionScore">0</span> 点</p>
+  </div>
+</div>
+</div>   <!-- ← ここで func セクションを閉じる ------------------------------------------>
 
 <div id="str" class="section">
   <h1>Strengthスコア入力</h1>
   <div style="text-align:center;">
     <button onclick="showSection('home')">閉じる</button>
   </div>
-</div>   <!-- ← ここで str セクションを閉じる -->
+</div>   <!-- ← ここで str セクションを閉じる ------------------------------------------>
 
 <div id="rom" class="section">
   <h1>ROMスコア入力</h1>
@@ -118,11 +300,15 @@
 </div>
 
 <div id="result" class="section">
-  <h1>集計</h1>
+  <h1>集計結果</h1>
+
+  <!-- ここにスコアが自動で入る -->
+  <div id="resultContent"></div>
+
   <div style="text-align:center;">
-    <button onclick="showSection('home')">閉じる</button>
+    <button class="redButton" onclick="showSection('home')">閉じる</button>
   </div>
-</div>   <!-- ← ここで 集計 セクションを閉じる -->
+</div>
 </div>
 
   <!---------------------------------------- ここに JavaScript ---------------------------------------->
@@ -136,10 +322,10 @@
 <!---------------------------------------- 変数の宣言 ---------------------------------------->
 
 let scores = { 
-joa:{pain:0,adl:0,rom:0,strength:0,Xp:0}, 
-ases:{pain:0,adl:0,rom:0,strength:0}, 
-constant:{pain:0,adl:0,rom:0,strength:0}, 
-ucla:{pain:0,adl:0,rom:0,strength:0} };
+joa:{pain:0,adl:0,func:0,rom:0,strength:0,Xp:0}, 
+ases:{pain:0,adl:0,func:0,rom:0,strength:0}, 
+constant:{pain:0,adl:0,func:0,rom:0,strength:0}, 
+ucla:{pain:0,adl:0,func:0,rom:0,strength:0} };
 
 <!---------------------------------------- Pain集計 ---------------------------------------->
 
@@ -167,8 +353,112 @@ function savePain() {
   scores.ucla.pain = row.ucla;
   scores.constant.pain = row.constant;
 
-  alert("Painスコアを保存しました");
+document.getElementById("asesPainScore").textContent = scores.ases.pain;
+document.getElementById("joaPainScore").textContent = scores.joa.pain;
+document.getElementById("uclaPainScore").textContent = scores.ucla.pain;
+document.getElementById("constantPainScore").textContent = scores.constant.pain;
+
 }
+
+<!---------------------------------------- ADL集計 ---------------------------------------->
+
+function saveUclaAdl() {
+  let val = document.querySelector('input[name="uclaSatisfaction"]:checked');
+  if (!val) return; // 未選択なら何もしない
+
+  scores.ucla.adl = parseInt(val.value, 10);
+
+  const v = n => {
+    const el = document.querySelector(`input[name="${n}"]:checked`);
+    return el ? parseInt(el.value,10) : 0;
+  };
+
+  const both = ["adl1","adl2","adl3","adl4","adl5","adl6"];
+  const joaOnly = ["adl7","adl8","adl9","adl10"];
+  const asesOnly = ["adl11","adl12","adl13","adl14"];
+
+  const sum = names => names.reduce((s,n)=>s+v(n),0);
+
+  const joa = sum(both) + sum(joaOnly);
+  const ases = sum(both) + sum(asesOnly);
+
+scores.joa.adl = Math.floor(joa/3);
+scores.ases.adl = Math.floor(ases*5/3);
+
+document.getElementById("joaAdlScore").textContent = Math.floor(joa/3);
+document.getElementById("asesAdlScore").textContent = Math.floor(ases*5/3);
+
+
+  // 表示更新
+  document.getElementById("uclaAdlScore").textContent = scores.ucla.adl;
+}
+<!---------------------------------------- function集計 ---------------------------------------->
+// Function 保存
+function saveFunction(){
+  const v = name => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? parseInt(el.value,10) : 0;
+  };
+
+  const joaF = v('joa_muscle') + v('joa_hold');                         // /10
+  const constantF = v('const_work') + v('const_sport') +                 // /20
+                    v('const_sleep') + v('const_reach');
+  const uclaF = v('ucla_func');                                          // /10
+
+  scores.joa.function = joaF;
+  scores.constant.function = constantF;
+  scores.ucla.function = uclaF;
+
+  document.getElementById('joaFunctionScore').textContent = joaF;
+  document.getElementById('constantFunctionScore').textContent = constantF;
+  document.getElementById('uclaFunctionScore').textContent = uclaF;
+}
+
+
+<!---------------------------------------- Total集計 ---------------------------------------->
+function showResults() {
+  let html = "";
+
+  // ASES
+  let ases = scores.ases;
+  let asesTotal = Object.values(ases).reduce((a,b)=>a+b,0);
+  html += "●ASES<br>";
+  for (let key in ases) {
+    html += key + ":" + ases[key] + "点、";
+  }
+  html += "→ 合計 " + asesTotal + "点<br><br>";
+
+  // JOA
+  let joa = scores.joa;
+  let joaTotal = Object.values(joa).reduce((a,b)=>a+b,0);
+  html += "●JOA<br>";
+  for (let key in joa) {
+    html += key + ":" + joa[key] + "点、";
+  }
+  html += "→ 合計 " + joaTotal + "点<br><br>";
+
+  // UCLA
+  let ucla = scores.ucla;
+  let uclaTotal = Object.values(ucla).reduce((a,b)=>a+b,0);
+  html += "●UCLA<br>";
+  for (let key in ucla) {
+    html += key + ":" + ucla[key] + "点、";
+  }
+  html += "→ 合計 " + uclaTotal + "点<br><br>";
+
+  // Constant
+  let constant = scores.constant;
+  let constantTotal = Object.values(constant).reduce((a,b)=>a+b,0);
+  html += "●Constant<br>";
+  for (let key in constant) {
+    html += key + ":" + constant[key] + "点、";
+  }
+  html += "→ 合計 " + constantTotal + "点<br><br>";
+
+  // 出力
+  document.getElementById("resultContent").innerHTML = html;
+}
+
 
   </script>
 </body>
